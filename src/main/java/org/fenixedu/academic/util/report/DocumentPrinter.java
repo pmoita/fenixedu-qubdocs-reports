@@ -37,6 +37,7 @@ import org.fenixedu.academic.domain.serviceRequests.documentRequests.ExtraCurric
 import org.fenixedu.academic.domain.serviceRequests.documentRequests.RegistryDiplomaRequest;
 import org.fenixedu.academic.domain.serviceRequests.documentRequests.StandaloneEnrolmentCertificateRequest;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.dto.student.RegistrationConclusionBean;
 import org.fenixedu.academic.report.academicAdministrativeOffice.AdministrativeOfficeDocument;
 import org.fenixedu.academic.report.academicAdministrativeOffice.DocumentRequestReader;
 import org.fenixedu.qubdocs.FenixEduDocumentGenerator;
@@ -71,8 +72,9 @@ public class DocumentPrinter implements ReportPrinter {
             final AdministrativeOfficeDocument document = (AdministrativeOfficeDocument) reportDescription;
 
             final FenixEduDocumentGenerator generator =
-                    FenixEduDocumentGenerator.create("/home/diogo/workspace_fenixedu/fenixedu-qubdocs-reports/src/main/resources/META-INF/templates/certidaoInscricao.odt",
-                            FenixEduDocumentGenerator.PDF);
+                    FenixEduDocumentGenerator
+                            .create("/home/diogo/workspace_fenixedu/fenixedu-qubdocs-reports/src/main/resources/META-INF/templates/certidaoInscricao.odt",
+                                    FenixEduDocumentGenerator.PDF);
             final DocumentRequest documentRequest = DocumentRequestReader.toDocumentRequest(document);
             final ExecutionYear executionYear = documentRequest.getExecutionYear();
             final Registration registration = documentRequest.getRegistration();
@@ -84,8 +86,17 @@ public class DocumentPrinter implements ReportPrinter {
             generator.registerDataProvider(new LocalizedDatesProvider());
             generator.registerDataProvider(new ServiceRequestDataProvider(DocumentRequestReader.toDocumentRequest(document),
                     executionYear));
-            generator.registerDataProvider(new DegreeCurricularPlanInformationDataProvider(registration, requestedCycle,
-                    executionYear));
+
+            final RegistrationConclusionBean conclusionBean = new RegistrationConclusionBean(registration, requestedCycle);
+
+            if (conclusionBean.isConcluded()) {
+                generator.registerDataProvider(new DegreeCurricularPlanInformationDataProvider(registration, requestedCycle,
+                        conclusionBean.getConclusionYear(), conclusionBean.getConclusionDate().toLocalDate()));
+            } else {
+                generator.registerDataProvider(new DegreeCurricularPlanInformationDataProvider(registration, requestedCycle,
+                        executionYear));
+            }
+
             generator
                     .registerDataProvider(new EnrolmentsDataProvider(registration, executionYear, documentRequest.getLanguage()));
 
@@ -147,14 +158,14 @@ public class DocumentPrinter implements ReportPrinter {
     }
 
     private ProgramConclusion programConclusion(final Registration registration, final DocumentRequest documentRequest) {
-        if(documentRequest instanceof RegistryDiplomaRequest) {
+        if (documentRequest instanceof RegistryDiplomaRequest) {
             return ((RegistryDiplomaRequest) documentRequest).getProgramConclusion();
-        } else if(documentRequest instanceof DiplomaRequest) {
+        } else if (documentRequest instanceof DiplomaRequest) {
             return ((DiplomaRequest) documentRequest).getProgramConclusion();
-        } else if(documentRequest instanceof DegreeFinalizationCertificateRequest) {
+        } else if (documentRequest instanceof DegreeFinalizationCertificateRequest) {
             return ((DegreeFinalizationCertificateRequest) documentRequest).getProgramConclusion();
         }
-    
+
         return null;
     }
 

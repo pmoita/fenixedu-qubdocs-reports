@@ -29,22 +29,21 @@ package org.fenixedu.qubdocs.academic.documentRequests.providers;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Locale;
 
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeCurricularPlan;
 import org.fenixedu.academic.domain.DegreeOfficialPublication;
+import org.fenixedu.academic.domain.DegreeSpecializationArea;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.degree.DegreeType;
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.exceptions.DomainException;
 import org.fenixedu.academic.domain.student.Registration;
-import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
-import org.fenixedu.qubdocs.util.DocsStringUtils;
 import org.joda.time.LocalDate;
 
-import com.google.common.collect.Sets;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.qubit.terra.docs.util.IDocumentFieldsData;
 import com.qubit.terra.docs.util.IFieldsExporter;
 import com.qubit.terra.docs.util.IReportDataProvider;
@@ -221,26 +220,25 @@ public class DegreeCurricularPlanInformationDataProvider implements IReportDataP
 
     // TODO
     public Collection<LocalizedString> getSpecializationAreaNames() {
-//        return Collections2.transform(getDegreeOfficialPublication().getSpecializationArea(),
-//                new Function<DegreeSpecializationArea, LocalizedString>() {
-//                    public LocalizedString apply(final DegreeSpecializationArea specializationArea) {
-//                        return DocsStringUtils.toLocalizedString(specializationArea.getName());
-//                    }
-//                });
 
-        return Sets.newHashSet();
+        return Collections2.transform(getDegreeOfficialPublication().getSpecializationAreaSet(),
+                new Function<DegreeSpecializationArea, LocalizedString>() {
+                    @Override
+                    public LocalizedString apply(final DegreeSpecializationArea specializationArea) {
+                        return specializationArea.getName().toLocalizedString();
+                    }
+                });
     }
 
     // TODO
-    public LocalizedString getPrevailingScientificArea() {
-        // return getDegree().getPrevailingScientificAreaI18N(executionYear);
-        return null;
+    public String getPrevailingScientificArea() {
+
+        return getDegree().getPrevailingScientificArea();
     }
 
     // TODO
     public LocalizedString getQualificationLevel() {
-        // return getDegree().getQualificationLevel(executionYear);
-        return null;
+        return getDegree().getDegreeInfoFor(executionYear).getDegreeInfoFuture().getQualificationLevel().toLocalizedString();
     }
 
     // TODO
