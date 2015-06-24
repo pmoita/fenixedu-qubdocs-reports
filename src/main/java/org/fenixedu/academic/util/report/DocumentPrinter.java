@@ -71,7 +71,7 @@ public class DocumentPrinter implements ReportPrinter {
             final AdministrativeOfficeDocument document = (AdministrativeOfficeDocument) reportDescription;
 
             final FenixEduDocumentGenerator generator =
-                    FenixEduDocumentGenerator.create("C:/Users/PMOITA/Desktop/certidaoInscricao.odt",
+                    FenixEduDocumentGenerator.create("C:/Users/PMOITA/Desktop/Certidoes_Declaracoes/certidaoInscricao.odt",
                             FenixEduDocumentGenerator.PDF);
             final DocumentRequest documentRequest = DocumentRequestReader.toDocumentRequest(document);
             final ExecutionYear executionYear = documentRequest.getExecutionYear();

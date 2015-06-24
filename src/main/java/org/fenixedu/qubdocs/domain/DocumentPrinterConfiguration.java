@@ -38,9 +38,9 @@ import com.google.common.collect.Sets;
 import com.qubit.terra.docs.core.IDocumentTemplateService;
 
 public class DocumentPrinterConfiguration extends DocumentPrinterConfiguration_Base implements IDocumentTemplateService {
-	
-	private static String DEFAULT_FONTS_PATH = "/usr/share/fonts";
-    
+
+    private static String DEFAULT_FONTS_PATH = "C:/Windows/Fonts";
+
     private DocumentPrinterConfiguration() {
         super();
         setBennu(Bennu.getInstance());
@@ -48,12 +48,12 @@ public class DocumentPrinterConfiguration extends DocumentPrinterConfiguration_B
         setOpenOfficeConverting(true);
     }
 
-	@Override
-	public boolean isOpenOfficeConverting() {
-		return getOpenOfficeConverting() != null && getOpenOfficeConverting();
-	}
+    @Override
+    public boolean isOpenOfficeConverting() {
+        return getOpenOfficeConverting() != null && getOpenOfficeConverting();
+    }
 
-	@Override
+    @Override
     public Set<? extends DocumentTemplate> readAllDocuments() {
         return Bennu.getInstance().getDocumentTemplatesSet();
     }
@@ -62,20 +62,20 @@ public class DocumentPrinterConfiguration extends DocumentPrinterConfiguration_B
     public Set<? extends DocumentTemplate> readActiveDocuments() {
         return Sets.filter(readAllDocuments(), DocumentTemplate.filters.active(true));
     }
-	
+
     @Atomic(mode = TxMode.SPECULATIVE_READ)
-	public static DocumentPrinterConfiguration getInstance() {
-		if (Bennu.getInstance().getDocumentPrinterConfiguration() == null) {
-			return initialize();
-		}
-		return Bennu.getInstance().getDocumentPrinterConfiguration();
-	}
-	
+    public static DocumentPrinterConfiguration getInstance() {
+        if (Bennu.getInstance().getDocumentPrinterConfiguration() == null) {
+            return initialize();
+        }
+        return Bennu.getInstance().getDocumentPrinterConfiguration();
+    }
+
     private static DocumentPrinterConfiguration initialize() {
         if (Bennu.getInstance().getDocumentPrinterConfiguration() == null) {
             return new DocumentPrinterConfiguration();
         }
         return Bennu.getInstance().getDocumentPrinterConfiguration();
     }
-    
+
 }

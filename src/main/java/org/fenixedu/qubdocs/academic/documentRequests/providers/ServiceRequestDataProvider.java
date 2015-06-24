@@ -81,10 +81,13 @@ public class ServiceRequestDataProvider implements IReportDataProvider {
         return null;
     }
 
-	@Override
-	public void registerFieldsMetadata(IFieldsExporter exporter) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void registerFieldsMetadata(IFieldsExporter exporter) {
+        // TODO Auto-generated method stub
+        //exporter.registerSimpleField("serviceRequest.detailed", "Boolean que indica se a certidão é discriminada.");
+        //exporter.registerCollectionField("serviceRequest.fees", "Taxas aplicáveis.");
+        //exporter.registerSimpleField("serviceRequest.fees.caption", "Valor da taxa");
+
+    }
 
 }
